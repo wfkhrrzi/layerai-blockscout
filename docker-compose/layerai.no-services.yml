@@ -1,0 +1,103 @@
+version: '3.9'
+
+services:
+  redis-db:
+    extends:
+      file: ./services/redis.yml
+      service: redis-db
+
+  db-init:
+    extends:
+      file: ./services/db.yml
+      service: db-init
+
+  db:
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+    extends:
+      file: ./services/db.yml
+      service: db
+
+  backend:
+    depends_on:
+      - db
+      - redis-db
+    extends:
+      file: ./services/backend.yml
+      service: backend
+    links:
+      - db:database
+    environment:
+        ETHEREUM_JSONRPC_HTTP_URL: http://host.docker.internal:8449/
+        ETHEREUM_JSONRPC_TRACE_URL: http://host.docker.internal:8449/
+        CHAIN_TYPE: 'arbitrum'
+        INDEXER_ARBITRUM_L1_RPC: 'https://eth-sepolia.nodereal.io/v1/dec1aa711843415f830cbb4646a8f299'
+        INDEXER_ARBITRUM_L1_ROLLUP_CONTRACT: '0x74eF183Ae6D0B4f482DA1ef5Bbb57e993B6EF347'
+        INDEXER_ARBITRUM_L1_ROLLUP_INIT_BLOCK: '7891807'
+        INDEXER_ARBITRUM_L1_RPC_HISTORICAL_BLOCKS_RANGE: '40'
+        INDEXER_ARBITRUM_BATCHES_TRACKING_ENABLED: 'true'
+        INDEXER_ARBITRUM_BATCHES_TRACKING_L1_FINALIZATION_CHECK_ENABLED: 'true'
+        INDEXER_ARBITRUM_BRIDGE_MESSAGES_TRACKING_ENABLED: 'false'
+        NFT_MEDIA_HANDLER_ENABLED: 'false'
+        NFT_MEDIA_HANDLER_REMOTE_DISPATCHER_NODE_MODE_ENABLED: 'false'
+        INDEXER_DISABLE_PENDING_TRANSACTIONS_FETCHER: 'true'
+        INDEXER_CATCHUP_BLOCK_INTERVAL: '5s'
+        DISABLE_EXCHANGE_RATES: 'true'
+        BRIDGED_TOKENS_ENABLED: 'false'
+        MICROSERVICE_SC_VERIFIER_ENABLED: 'true'
+        MICROSERVICE_SC_VERIFIER_URL: 'https://layerai-sc-verifier.uludagcrib.site/'
+        MICROSERVICE_SC_VERIFIER_TYPE: 'sc_verifier'
+        # TZ: 'Asia/Kuala_Lumpur'
+    env_file:
+      - ./.env
+
+  frontend:
+    depends_on:
+      - backend
+    extends:
+      file: ./services/frontend.yml
+      service: frontend
+    environment:
+      NEXT_PUBLIC_NETWORK_RPC_URL: https://layerai.uludagcrib.site/
+      NEXT_PUBLIC_NETWORK_NAME: "LayerAI Chain"
+      NEXT_PUBLIC_NETWORK_ID: '11223344'
+      NEXT_PUBLIC_NETWORK_SHORT_NAME: "LayerAI"
+      NEXT_PUBLIC_NETWORK_CURRENCY_NAME: 'Ether'
+      NEXT_PUBLIC_NETWORK_CURRENCY_SYMBOL: 'ETH'
+      NEXT_PUBLIC_NETWORK_CURRENCY_DECIMALS: '18'
+      NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID: '8ceca57d0b44dbe7d22e386ae19617ca'
+      NEXT_PUBLIC_AD_BANNER_PROVIDER: "none"
+      NEXT_PUBLIC_ROLLUP_TYPE: 'arbitrum'
+      NEXT_PUBLIC_ROLLUP_PARENT_CHAIN: '{"baseUrl":"https://eth-sepolia.blockscout.com/"}'
+      NEXT_PUBLIC_GAS_TRACKER_ENABLED: 'false'
+      NEXT_PUBLIC_ROLLUP_L1_BASE_URL: 'https://eth-sepolia.blockscout.com/'
+      NEXT_PUBLIC_API_HOST: 'layerai-blockscout.uludagcrib.site'
+      NEXT_PUBLIC_API_PROTOCOL: 'https'
+      NEXT_PUBLIC_API_WEBSOCKET_PROTOCOL: 'wss'
+      NEXT_PUBLIC_APP_HOST: 'layerai-blockscout.uludagcrib.site'
+      NEXT_PUBLIC_APP_PROTOCOL: 'https'
+      NEXT_PUBLIC_HOMEPAGE_STATS: '[]'
+      NEXT_PUBLIC_HOMEPAGE_CHARTS: '[]'
+      # NEXT_PUBLIC_API_HOST: '192.168.0.21'
+      # NEXT_PUBLIC_API_PROTOCOL: 'http'
+      # NEXT_PUBLIC_APP_HOST: '192.168.0.21'
+      # NEXT_PUBLIC_APP_PROTOCOL: 'http'
+
+  sc-verifier:
+    extends:
+      file: ./services/smart-contract-verifier.yml
+      service: smart-contract-verifier
+    ports:
+      - 8082:8050
+
+  proxy:
+    depends_on:
+      - backend
+      - frontend
+    extends:
+      file: ./services/nginx-explorer.yml
+      service: proxy
+    volumes:
+      # - "./proxy/explorer.conf.template:/etc/nginx/templates/default.conf.template"
+      - "./proxy/cloudflare.conf.template:/etc/nginx/templates/default.conf.template"
