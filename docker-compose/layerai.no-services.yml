@@ -79,6 +79,8 @@ services:
       NEXT_PUBLIC_APP_PROTOCOL: 'https'
       NEXT_PUBLIC_HOMEPAGE_STATS: '[]'
       NEXT_PUBLIC_HOMEPAGE_CHARTS: '[]'
+      NEXT_PUBLIC_NETWORK_LOGO: 'https://raw.githubusercontent.com/blockscout/blockscout/feec8fc566fd7f445b7731b46bb4c9947fb222f0/apps/block_scout_web/assets/static/images/network-logo.svg'
+      NEXT_PUBLIC_NETWORK_ICON: 'https://raw.githubusercontent.com/blockscout/blockscout/feec8fc566fd7f445b7731b46bb4c9947fb222f0/apps/block_scout_web/assets/static/images/network-icon.svg'
       # NEXT_PUBLIC_API_HOST: '192.168.0.21'
       # NEXT_PUBLIC_API_PROTOCOL: 'http'
       # NEXT_PUBLIC_APP_HOST: '192.168.0.21'
