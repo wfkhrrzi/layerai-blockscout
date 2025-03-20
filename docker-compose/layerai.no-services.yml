@@ -5,11 +5,15 @@ services:
     extends:
       file: ./services/redis.yml
       service: redis-db
+    networks:
+      - proxy-shared-network
 
   db-init:
     extends:
       file: ./services/db.yml
       service: db-init
+    networks:
+      - proxy-shared-network
 
   db:
     depends_on:
@@ -18,6 +22,8 @@ services:
     extends:
       file: ./services/db.yml
       service: db
+    networks:
+      - proxy-shared-network
 
   backend:
     depends_on:
@@ -46,11 +52,13 @@ services:
         DISABLE_EXCHANGE_RATES: 'true'
         BRIDGED_TOKENS_ENABLED: 'false'
         MICROSERVICE_SC_VERIFIER_ENABLED: 'true'
-        MICROSERVICE_SC_VERIFIER_URL: 'https://layerai-sc-verifier.uludagcrib.site/'
+        MICROSERVICE_SC_VERIFIER_URL: 'https://layerai-sc-verifier.bytesdiscovery.com/'
         MICROSERVICE_SC_VERIFIER_TYPE: 'sc_verifier'
         # TZ: 'Asia/Kuala_Lumpur'
     env_file:
       - ./.env
+    networks:
+      - proxy-shared-network
 
   frontend:
     depends_on:
@@ -59,7 +67,7 @@ services:
       file: ./services/frontend.yml
       service: frontend
     environment:
-      NEXT_PUBLIC_NETWORK_RPC_URL: https://layerai.uludagcrib.site/
+      NEXT_PUBLIC_NETWORK_RPC_URL: https://layerai-node.bytesdiscovery.com/
       NEXT_PUBLIC_NETWORK_NAME: "LayerAI Chain"
       NEXT_PUBLIC_NETWORK_ID: '11223344'
       NEXT_PUBLIC_NETWORK_SHORT_NAME: "LayerAI"
@@ -72,10 +80,10 @@ services:
       NEXT_PUBLIC_ROLLUP_PARENT_CHAIN: '{"baseUrl":"https://eth-sepolia.blockscout.com/"}'
       NEXT_PUBLIC_GAS_TRACKER_ENABLED: 'false'
       NEXT_PUBLIC_ROLLUP_L1_BASE_URL: 'https://eth-sepolia.blockscout.com/'
-      NEXT_PUBLIC_API_HOST: 'layerai-blockscout.uludagcrib.site'
+      NEXT_PUBLIC_API_HOST: 'layerai-explorer.bytesdiscovery.com'
       NEXT_PUBLIC_API_PROTOCOL: 'https'
       NEXT_PUBLIC_API_WEBSOCKET_PROTOCOL: 'wss'
-      NEXT_PUBLIC_APP_HOST: 'layerai-blockscout.uludagcrib.site'
+      NEXT_PUBLIC_APP_HOST: 'layerai-explorer.bytesdiscovery.com'
       NEXT_PUBLIC_APP_PROTOCOL: 'https'
       NEXT_PUBLIC_HOMEPAGE_STATS: '[]'
       NEXT_PUBLIC_HOMEPAGE_CHARTS: '[]'
@@ -85,6 +93,8 @@ services:
       # NEXT_PUBLIC_API_PROTOCOL: 'http'
       # NEXT_PUBLIC_APP_HOST: '192.168.0.21'
       # NEXT_PUBLIC_APP_PROTOCOL: 'http'
+    networks:
+      - proxy-shared-network
 
   sc-verifier:
     extends:
@@ -92,6 +102,8 @@ services:
       service: smart-contract-verifier
     ports:
       - 8082:8050
+    networks:
+      - proxy-shared-network
 
   proxy:
     depends_on:
@@ -103,3 +115,9 @@ services:
     volumes:
       # - "./proxy/explorer.conf.template:/etc/nginx/templates/default.conf.template"
       - "./proxy/cloudflare.conf.template:/etc/nginx/templates/default.conf.template"
+    networks:
+      - proxy-shared-network
+
+networks:
+  proxy-shared-network:
+    external: true
