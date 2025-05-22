@@ -38,9 +38,9 @@ services:
         ETHEREUM_JSONRPC_HTTP_URL: http://host.docker.internal:8449/
         ETHEREUM_JSONRPC_TRACE_URL: http://host.docker.internal:8449/
         CHAIN_TYPE: 'arbitrum'
-        INDEXER_ARBITRUM_L1_RPC: 'https://eth-sepolia.nodereal.io/v1/dec1aa711843415f830cbb4646a8f299'
-        INDEXER_ARBITRUM_L1_ROLLUP_CONTRACT: '0x74eF183Ae6D0B4f482DA1ef5Bbb57e993B6EF347'
-        INDEXER_ARBITRUM_L1_ROLLUP_INIT_BLOCK: '7891807'
+        INDEXER_ARBITRUM_L1_RPC: 'http://13.215.163.39:8545'
+        INDEXER_ARBITRUM_L1_ROLLUP_CONTRACT: '0xc318ce36D1B443C002AE283E075A48EbB581A390'
+        INDEXER_ARBITRUM_L1_ROLLUP_INIT_BLOCK: '447225'
         INDEXER_ARBITRUM_L1_RPC_HISTORICAL_BLOCKS_RANGE: '1000'
         INDEXER_ARBITRUM_BATCHES_TRACKING_ENABLED: 'true'
         INDEXER_ARBITRUM_BATCHES_TRACKING_L1_FINALIZATION_CHECK_ENABLED: 'true'
@@ -69,7 +69,7 @@ services:
     environment:
       NEXT_PUBLIC_NETWORK_RPC_URL: https://layerai-node.bytesdiscovery.com/
       NEXT_PUBLIC_NETWORK_NAME: "LayerAI Chain"
-      NEXT_PUBLIC_NETWORK_ID: '11223344'
+      NEXT_PUBLIC_NETWORK_ID: '73194286'
       NEXT_PUBLIC_NETWORK_SHORT_NAME: "LayerAI"
       NEXT_PUBLIC_NETWORK_CURRENCY_NAME: 'Ether'
       NEXT_PUBLIC_NETWORK_CURRENCY_SYMBOL: 'ETH'
@@ -77,9 +77,9 @@ services:
       NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID: '8ceca57d0b44dbe7d22e386ae19617ca'
       NEXT_PUBLIC_AD_BANNER_PROVIDER: "none"
       NEXT_PUBLIC_ROLLUP_TYPE: 'arbitrum'
-      NEXT_PUBLIC_ROLLUP_PARENT_CHAIN: '{"baseUrl":"https://eth-sepolia.blockscout.com/"}'
+      NEXT_PUBLIC_ROLLUP_PARENT_CHAIN: '{"baseUrl":"https://eth-hoodi.blockscout.com/"}'
       NEXT_PUBLIC_GAS_TRACKER_ENABLED: 'false'
-      NEXT_PUBLIC_ROLLUP_L1_BASE_URL: 'https://eth-sepolia.blockscout.com/'
+      NEXT_PUBLIC_ROLLUP_L1_BASE_URL: 'https://eth-hoodi.blockscout.com/'
       NEXT_PUBLIC_API_HOST: 'layerai-explorer.bytesdiscovery.com'
       NEXT_PUBLIC_API_PROTOCOL: 'https'
       NEXT_PUBLIC_API_WEBSOCKET_PROTOCOL: 'wss'
